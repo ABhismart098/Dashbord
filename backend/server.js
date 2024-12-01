@@ -29,9 +29,9 @@ cloudinary.config({
 app.use('/api', indexRoutes);
 
 // Default Route for Testing
-app.get('/', (req, res) => {
-  res.send('Hi, Server is running!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hi, Server is running!');
+// });
 
 // Start the Server
 const PORT = process.env.PORT || 5000;

@@ -17,11 +17,6 @@ function CollegeLoginPage() {
     try {
       // Call the loginUser function
       const { token, user } = await loginUser(userName, password); // Pass userName instead of email
-
-      // Save token to localStorage
-      localStorage.setItem("authToken", token);
-
-      // Redirect to dashboard or desired route
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error.message || error);

@@ -6,6 +6,7 @@ const Login = require('../models/login');
 
 // Login validation
 const login = async (req, res) => {
+  debugger;
   const { userName, password } = req.body;
   const user = await Login.findOne({ userName });
 

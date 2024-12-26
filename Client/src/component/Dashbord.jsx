@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { addUser, fetchUsers } from "../api/auth";
+import { ToastContainer, toast } from 'react-toastify';
 import Aleart from "./Aleart";
 
 // Dummy data for the search feature (for local testing)
@@ -13,6 +14,18 @@ const employees = [
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
+
+const showToast = (message, type = "success") => {
+  toast(message, {
+    position: "top-center",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    type: type, // "success" or "error"
+  });
+};
 
 function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -143,14 +156,13 @@ const handleAleart = () => {
       const res =  await addUser(newUser);
       console.log("API Response:", res.data); // Log response for debugging
       if(res.status == 409)
+        
       {
-        // alert(res.data.error)
-        handleAleart();
-        setAleartMessage(res.data.error);
-        resetNewUserForm();
+        showToast(res.data.error, "error");
       }
       else
       {
+        showToast("User created successfully!", "success");
         setShowModal(false);
         setUsers((prevUsers) => [...prevUsers, newUser]); // Optimistically update the user list
         resetNewUserForm();
@@ -158,7 +170,7 @@ const handleAleart = () => {
 
 
     } catch (error) {
-      alert("Failed to add user. Please try again.");
+      showToast("Failed to add user. Please try again.", "error");
     }
   };
 
@@ -190,11 +202,11 @@ const handleAleart = () => {
     const file = e.target.files[0];
     if (file) {
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        alert("Only JPG, JPEG, and PNG files are allowed.");
+        showToast("Only JPG, JPEG, and PNG files are allowed.", "error");
         return;
       }
       if (file.size > MAX_IMAGE_SIZE) {
-        alert("File size should not exceed 2 MB.");
+        showToast("File size should not exceed 2 MB.", "error");
         return;
       }
       setNewUser((prevState) => ({
@@ -208,7 +220,7 @@ const handleAleart = () => {
   return (
     <div className="dashboard-container">
       <div style={{position:'absolute'}}>
-        {isAleart&&  <Aleart message={aleartMessage}/>}
+      <ToastContainer />
       </div>
       <nav className="navbar">
         <div className="navbar-left">

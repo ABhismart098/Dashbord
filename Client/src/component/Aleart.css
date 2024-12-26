@@ -1,0 +1,27 @@
+/* toastStyles.css */
+
+.Toastify__toast {
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.Toastify__toast--success {
+    background-color: #28a745; /* Green background for success */
+}
+
+.Toastify__toast--error {
+    background-color: #dc3545; /* Red background for error */
+}
+
+.Toastify__toast--info {
+    background-color: #17a2b8; /* Blue background for info */
+}
+
+.Toastify__toast--warning {
+    background-color: #ffc107; /* Yellow background for warning */
+}
+
+.Toastify__progress-bar {
+    background-color: #ffffff; /* White progress bar */
+}

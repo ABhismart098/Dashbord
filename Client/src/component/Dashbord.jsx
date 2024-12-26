@@ -31,8 +31,6 @@ function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [profileImage, setProfileImage] = useState("https://via.placeholder.com/40");
   const [showModal, setShowModal] = useState(false);
-  const [isAleart, setIsAleart] = useState(false);
-  const [aleartMessage,setAleartMessage] = useState("No");
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
@@ -47,12 +45,16 @@ function AdminDashboard() {
   const [error, setError] = useState(""); // Error state
   const navigate = useNavigate();
 
-const handleAleart = () => {
-  setIsAleart(true);
-  setTimeout(() => {
-    setIsAleart(false);
-  }, 5000);
-}
+  useEffect(() => {
+    toast.success("Welcome to the Admin Dashboard!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }, []);
 
 
   // Logout function
@@ -243,6 +245,7 @@ const handleAleart = () => {
           </button>
         </div>
       </nav>
+
 
       <div className="add-user-button-container">
         <button className="add-user-btn" onClick={handleAddUserClick}>

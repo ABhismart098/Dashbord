@@ -41,7 +41,9 @@ const findEmployeeById = async (id) => {
 // Create Employee
 exports.createEmployee = async (req, res) => {
   try {
+    const courses = [];
     const { name, email, mobile, designation, gender, course } = req.body;
+    courses.push(course);
     const checkEmail = await checkEmailUniqueness(email);
      if(!checkEmail){
       return res.status(409).json({ error: 'Email already exists' });
@@ -58,7 +60,7 @@ exports.createEmployee = async (req, res) => {
       mobile,
       designation,
       gender,
-      course,
+      courses,
     });
 
     await newEmployee.save(); // Save the Employee to the database

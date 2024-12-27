@@ -43,6 +43,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState([]); // State to store fetched users
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(""); // Error state
+  const [filter, setFilter] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {

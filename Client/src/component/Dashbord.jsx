@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
-import { addUser, fetchUsers } from "../api/auth";
+import { addUser, fetchUsers, updateUser, deleteUser } from "../api/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import Aleart from "./Aleart";
 
@@ -43,7 +43,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState([]); // State to store fetched users
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(""); // Error state
-  const [filter, setFilter] = useState();
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -201,6 +201,38 @@ function AdminDashboard() {
     }));
   };
 
+  const handleUpdate = (user) => {
+    setSelectedUserId(user.id); // Assuming `id` is the unique identifier
+    setUpdateUserData({
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      courses: user.courses,
+      designation: user.designation,
+      gender: user.gender,
+      profileImage: user.profileImage,
+    });
+    setShowUpdateModal(true);
+  };
+  
+  
+  const handleDelete = (user) => {
+    setSelectedUserId(user.id); // Assuming `id` is the unique identifier
+    setShowDeleteModal(true);
+  };
+  
+  const confirmDeleteUser = async () => {
+    try {
+      await deleteUser(selectedUserId); // Call the delete API
+      setShowDeleteModal(false);
+      fetchUsers(); // Refresh the employee list
+      console.log("User deleted successfully.");
+    } catch (error) {
+      console.error("Failed to delete user:", error.message);
+    }
+  };
+  
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -255,7 +287,7 @@ function AdminDashboard() {
       </div>
 
       
-    <div className="employee-list">
+    {/* <div className="employee-list">
   <h2>Employees</h2>
   {loading && <p>Loading...</p>}
   {error && <p style={{ color: "red" }}>{error}</p>}
@@ -343,7 +375,128 @@ function AdminDashboard() {
       </div>
     </>
   )}
+</div> */}
+
+<div className="employee-list">
+  <h2>Employees</h2>
+  {loading && <p>Loading...</p>}
+  {error && <p style={{ color: "red" }}>{error}</p>}
+  {!loading && !error && (
+    <>
+      <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th>Profile Image</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Course</th>
+            <th>Designation</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentRows.length > 0 ? (
+            currentRows.map((user, index) => (
+              <tr key={index}>
+                <td>
+                  {user.isValidProfileImage ? (
+                    <img
+                      src={user.profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        backgroundColor: "#007BFF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#FFF",
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      }}
+                    >
+                      {user.name[0].toUpperCase()}
+                    </div>
+                  )}
+                </td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.mobile}</td>
+                <td>{user.courses}</td>
+                <td>{user.designation}</td>
+                <td>
+                  <button
+                    onClick={() => handleUpdate(user)}
+                    style={{
+                      marginRight: "10px",
+                      padding: "5px 10px",
+                      backgroundColor: "#28a745",
+                      color: "#FFF",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDelete(user)}
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: "#dc3545",
+                      color: "#FFF",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" style={{ textAlign: "center" }}>
+                No employees found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <div style={{ marginTop: "10px", textAlign: "center" }}>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            style={{
+              margin: "0 5px",
+              padding: "5px 10px",
+              backgroundColor: page === currentPage ? "#007BFF" : "#FFF",
+              color: page === currentPage ? "#FFF" : "#000",
+              border: "1px solid #CCC",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
+    </>
+  )}
 </div>
+
 
   
 
@@ -471,5 +624,151 @@ function AdminDashboard() {
     </div>
   );
 }
+
+{showUpdateModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>Update User</h2>
+      <form onSubmit={handleUpdateSubmit} className="user-form">
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Name"
+            name="name"
+            value={updateUserData.name}
+            onChange={handleUpdateChange}
+            required
+          />
+        </div>
+        <div className="input-container">
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            value={updateUserData.email}
+            onChange={handleUpdateChange}
+            required
+          />
+        </div>
+        <div className="input-container">
+          <input
+            type="tel"
+            placeholder="Mobile Number"
+            name="mobile"
+            value={updateUserData.mobile || ""}
+            onChange={handleUpdateChange}
+            pattern="[0-9]{10}"
+            required
+          />
+        </div>
+
+        <div className="course-section">
+          <label>Courses</label>
+          <div className="input-courses">
+            {["React", "Node", "MongoDB"].map((course) => (
+              <div className="course-name" key={course}>
+                <input
+                  type="checkbox"
+                  id={course}
+                  value={course}
+                  checked={updateUserData.courses.includes(course)}
+                  onChange={handleCourseChange}
+                />
+                <label htmlFor={course}>{course}</label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="input-container">
+          <select
+            name="designation"
+            value={updateUserData.designation}
+            onChange={handleUpdateChange}
+            required
+          >
+            <option value="">Select Designation</option>
+            <option value="Hr">HR</option>
+            <option value="Manager">Manager</option>
+            <option value="Sales">Sales</option>
+          </select>
+        </div>
+
+        <div className="gender-section">
+          <label>Gender</label>
+          <div className="gender-options">
+            <input
+              type="radio"
+              id="male"
+              name="gender"
+              value="male"
+              checked={updateUserData.gender === "male"}
+              onChange={handleUpdateChange}
+            />
+            <label htmlFor="male">Male</label>
+          </div>
+          <div className="gender-options">
+            <input
+              type="radio"
+              id="female"
+              name="gender"
+              value="female"
+              checked={updateUserData.gender === "female"}
+              onChange={handleUpdateChange}
+            />
+            <label htmlFor="female">Female</label>
+          </div>
+        </div>
+
+        <div className="input-container">
+          <label>Profile Image</label>
+          <input
+            type="file"
+            name="profileImage"
+            onChange={handleFileChange}
+            accept="image/jpeg, image/png, image/jpg"
+          />
+        </div>
+
+        <div className="modal-actions">
+          <button type="submit" className="submit-btn">
+            Update User
+          </button>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={handleCloseUpdateModal}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+{showDeleteModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>Delete User</h2>
+      <p>Are you sure you want to delete this user?</p>
+      <div className="modal-actions">
+        <button
+          className="delete-btn"
+          onClick={() => handleDeleteUser(selectedUserId)}
+        >
+          Delete
+        </button>
+        <button
+          className="cancel-btn"
+          onClick={handleCloseDeleteModal}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
 export default AdminDashboard;

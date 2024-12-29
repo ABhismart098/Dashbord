@@ -5,6 +5,7 @@ import { addUser, fetchUsers, updateUser, deleteUser } from "../api/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import Aleart from "./Aleart";
 
+
 // Dummy data for the search feature (for local testing)
 const employees = [
   { name: "John Doe", email: "john@demo.com", id: 1 },
@@ -45,7 +46,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(""); // Error state
   const navigate = useNavigate();
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -247,11 +248,19 @@ function AdminDashboard() {
       toast.error("Failed to update user.");
     }
   };
+  const openDeleteModal = (userId) => {
+    
+    console.log("User ID:", userId);
+    setSelectedUserId(userId);
+    setShowDeleteModal(true);
+  };
 
   const confirmDeleteUser = async () => {
     try {
       await deleteUser(selectedUserId);
+      openDeleteModal(selectedUserId);
       setUsers((prev) => prev.filter((user) => user.id !== selectedUserId));
+
       toast.success("User deleted successfully.");
     } catch {
       toast.error("Failed to delete user.");
@@ -260,23 +269,19 @@ function AdminDashboard() {
     }
   };
 
-  const openDeleteModal = (userId) => {
-    userId = userId.employees.id;
-    setSelectedUserId(userId);
-    setShowDeleteModal(true);
-  };
+  
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
-    setSelectedUserId(null);
+    setSelectedUserId(users.id);
   };
   const handleDeleteUser = async (userId) => {
     // Open the delete modal for confirmation
-    setSelectedUserId(userId);
+    setSelectedUserId(users.id);
     setShowDeleteModal(true);
   
     // Use a promise-based confirmation (or external confirmation logic if needed)
-    confirmDeleteUser();
+    confirmDeleteUser(openDeleteModal);
 
     if (!confirmDeleteUser)  {
       // If user cancels the confirmation, close the modal and reset the state
@@ -413,7 +418,7 @@ function AdminDashboard() {
                           Update
                         </button>
                         <button
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => confirmDeleteUser(user.id)}
                           style={{
                             margin: "0 5px",
                             padding: "5px 10px",

@@ -41,35 +41,44 @@ const findEmployeeById = async (id) => {
 // Create Employee
 exports.createEmployee = async (req, res) => {
   try {
-    const courses = [];
-    const { name, email, mobile, designation, gender, course } = req.body;
-    courses.push(course);
-    const checkEmail = await checkEmailUniqueness(email);
-     if(!checkEmail){
-      return res.status(409).json({ error: 'Email already exists' });
-     }
-    // Upload image if provided
-    const profileImage = req.file ? await uploadImage(req.file) : '';
-
-    // Create a new Employee document
-    const newEmployee = new Employee({
-      employeeId: uuidv4(),
-      profileImage,
-      name,
-      email,
-      mobile,
-      designation,
-      gender,
-      courses,
-    });
-
-    await newEmployee.save(); // Save the Employee to the database
-    res.status(201).json({ message: 'Employee created successfully', employee: newEmployee });
-  } catch (error) {
-    res.status(400).json({ error: `Error creating employee: ${error.message}` });
+  const { name, email, mobile, designation, gender, courses } = req.body;
+  const coursesArray = Array.isArray(courses)
+  ? courses
+  : courses.split(",").map((course) => course.trim());
+ 
+  console.log(courses, coursesArray, "coursescoursescourses");
+  const checkEmail = await checkEmailUniqueness(email);
+  if (!checkEmail) {
+  return res.status(409).json({ error: "Email already exists" });
   }
-};
-
+  // Upload image if provided
+  const profileImage = req.file ? await uploadImage(req.file) : "";
+ 
+  // Create a new Employee document
+  const newEmployee = new Employee({
+  employeeId: uuidv4(),
+  profileImage,
+  name,
+  email,
+  mobile,
+  designation,
+  gender,
+  course: coursesArray, // Store the array here
+  });
+ 
+  console.log(newEmployee, "newEmployeenewEmployee");
+ 
+  let data = await newEmployee.save(); // Save the Employee to the database
+  res.status(201).json({
+  message: "Employee created successfully",
+  employee: newEmployee,
+  });
+  } catch (error) {
+  res
+  .status(400)
+  .json({ error: `Error creating employee: ${error.message}` });
+  }
+ };
 // Get Employees List (with search and pagination)
 exports.getEmployees = async (req, res) => {
   try {

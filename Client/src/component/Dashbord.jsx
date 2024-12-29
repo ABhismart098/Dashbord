@@ -261,6 +261,7 @@ function AdminDashboard() {
   };
 
   const openDeleteModal = (userId) => {
+    userId = userId.employees.id;
     setSelectedUserId(userId);
     setShowDeleteModal(true);
   };

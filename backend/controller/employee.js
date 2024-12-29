@@ -65,9 +65,6 @@ exports.createEmployee = async (req, res) => {
   gender,
   course: coursesArray, // Store the array here
   });
- 
-  console.log(newEmployee, "newEmployeenewEmployee");
- 
   let data = await newEmployee.save(); // Save the Employee to the database
   res.status(201).json({
   message: "Employee created successfully",

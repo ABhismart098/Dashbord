@@ -394,7 +394,7 @@ function AdminDashboard() {
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.mobile}</td>
-                      <td>{user.courses && Array.isArray(user.courses) ? user.courses.join(", ") : "N/A"}</td>
+                      <td>{user.course}</td>
 
                       <td>{user.designation}</td>
                       <td style={{ textAlign: "center" }}>

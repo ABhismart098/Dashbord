@@ -18,14 +18,15 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-const generateToken = (user) => {
+const generateToken = (user, expiresIn = '5m') => {
   return jwt.sign(
     {
       userId: user.id,
       email: user.email
     }, // Payload: User data (can include more fields as needed)
     process.env.JWT_SECRET, // Secret key
-    { expiresIn: '1d' } // Token expiration time (1 day)
+    { expiresIn }, // Token expiration time (1 day)
+     //
   );
 };
 

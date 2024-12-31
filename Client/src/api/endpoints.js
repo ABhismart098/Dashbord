@@ -4,10 +4,10 @@
 
 const endpoints = {
   LOGIN: "/api/login", // Login endpoint
-  ADD_USER: "api/signup/employees/",
+  ADD_USER: "api/signup/employees",
   GET_USER: "api/signup/employees",
-  UPDATE_USER: "api/signup/employees/id",
-  DELETE_USER: "api/signup/employees/id",
+  UPDATE_USER: "api/signup/employees",
+  DELETE_USER: "api/signup/employees",
 };
 
 export default endpoints;

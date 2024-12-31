@@ -248,61 +248,44 @@ function AdminDashboard() {
       toast.error("Failed to update user.");
     }
   };
-  const openDeleteModal = (userId) => {
-    
-    console.log("User ID:", userId);
-    setSelectedUserId(userId);
-    setShowDeleteModal(true);
-  };
+  // Function to open the delete confirmation modal
+const openDeleteModal = (userId) => {
+  console.log("Opening delete modal for User ID:", userId);
+  setSelectedUserId(userId);
+  setShowDeleteModal(true);
+};
 
-  const confirmDeleteUser = async () => {
-    try {
-      await deleteUser(selectedUserId);
-      openDeleteModal(selectedUserId);
-      setUsers((prev) => prev.filter((user) => user.id !== selectedUserId));
+// Function to close the delete confirmation modal
+const closeDeleteModal = () => {
+  setShowDeleteModal(false);
+  setSelectedUserId(null);
+};
 
-      toast.success("User deleted successfully.");
-    } catch {
-      toast.error("Failed to delete user.");
-    } finally {
-      setShowDeleteModal(false);
-    }
-  };
+// Function to confirm and delete a user
+const confirmDeleteUser = async () => {
+  if (!selectedUserId) {
+    toast.error("No user selected for deletion.");
+    return;
+  }
+
+  try {
+    await deleteUser(selectedUserId); // Call API to delete user
+    setUsers((prevUsers) => prevUsers.filter((user) => user._id !== selectedUserId)); // Update state
+    toast.success("User deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    toast.error("Failed to delete user. Please try again.");
+  } finally {
+    closeDeleteModal(); // Ensure modal is closed
+  }
+};
+
+// Function to handle the delete process (open modal first, then confirm)
+const handleDeleteUser = (userId) => {
+  openDeleteModal(userId); // Open modal for confirmation
+};
 
   
-
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
-    setSelectedUserId(users.id);
-  };
-  const handleDeleteUser = async (userId) => {
-    // Open the delete modal for confirmation
-    setSelectedUserId(users.id);
-    setShowDeleteModal(true);
-  
-    // Use a promise-based confirmation (or external confirmation logic if needed)
-    confirmDeleteUser(openDeleteModal);
-
-    if (!confirmDeleteUser)  {
-      // If user cancels the confirmation, close the modal and reset the state
-      setShowDeleteModal(false);
-      setSelectedUserId(null);
-      return;
-    }
-  
-    try {
-      // Proceed to delete the user
-      await deleteUser(userId);
-      setUsers((prev) => prev.filter((user) => user.id !== userId));
-      toast.success("User deleted successfully.");
-    } catch (error) {
-      toast.error("Failed to delete user. Please try again.");
-    } finally {
-      // Close the modal and reset the state
-      setShowDeleteModal(false);
-      setSelectedUserId(null);
-    }
-  };
   
 
   
@@ -418,7 +401,7 @@ function AdminDashboard() {
                           Update
                         </button>
                         <button
-                          onClick={() => confirmDeleteUser(user.id)}
+                          onClick={() => handleDeleteUser(user._id)}
                           style={{
                             margin: "0 5px",
                             padding: "5px 10px",
@@ -588,20 +571,21 @@ function AdminDashboard() {
   
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-            <div className="modal-actions">
-              <button className="delete-btn" onClick={confirmDeleteUser}>
-                Delete
-              </button>
-              <button className="cancel-btn" onClick={closeDeleteModal}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Confirm Deletion</h3>
+      <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+      <div className="modal-actions">
+        <button className="delete-btn" onClick={confirmDeleteUser}>
+          Confirm
+        </button>
+        <button className="cancel-btn" onClick={closeDeleteModal}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }  

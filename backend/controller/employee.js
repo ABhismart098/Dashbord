@@ -162,7 +162,7 @@ exports.deleteEmployee = async (req, res) => {
       return res.status(404).json({ error: 'Employee not found' });
     }
 
-    res.status(200).json({ message: 'Employee deleted successfully' });
+    res.status(200).json({ message: 'Employee deleted successfully' , user: deletedEmployee});
   } catch (error) {
     res.status(500).json({ error: `Error deleting employee: ${error.message}` });
   }

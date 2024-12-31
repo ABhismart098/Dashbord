@@ -1,32 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { addUser, fetchUsers, updateUser, deleteUser } from "../api/auth";
 import { ToastContainer, toast } from 'react-toastify';
-import Aleart from "./Aleart";
+import showToast from "./Aleart";
 
 
-// Dummy data for the search feature (for local testing)
-const employees = [
-  { name: "John Doe", email: "john@demo.com", id: 1 },
-  { name: "Jane Smith", email: "jane@demo.com", id: 2 },
-  { name: "Sam Adams", email: "sam@demo.com", id: 3 },
-];
+
+
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
 
-const showToast = (message, type = "success") => {
-  toast(message, {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    type: type, // "success" or "error"
-  });
-};
+
 
 
 function AdminDashboard() {
@@ -65,13 +51,8 @@ function AdminDashboard() {
 
 
   useEffect(() => {
-    toast.success("Welcome to the Admin Dashboard!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+   showToast("Welcome to the Admin Dashboard!", {
+      
     });
   }, []);
 
@@ -135,9 +116,16 @@ function AdminDashboard() {
   };
 
   // Search filter logic
-  const filteredEmployees = users.filter(
-    (user) => user.name.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase())
+
+const filteredEmployees = useMemo(() => {
+  const query = searchQuery.toLowerCase();
+  return users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(query) || user.email.toLowerCase().includes(query)
   );
+}, [users, searchQuery]);
+
+  
 
   // Modal and form handling
   const handleAddUserClick = () => setShowModal(true);
@@ -176,7 +164,7 @@ function AdminDashboard() {
     try {
       const res =  await addUser(newUser);
       console.log("API Response:", res.data); // Log response for debugging
-      if(res.status == 409)
+      if(res.status === 409)
         
       {
         showToast(res.data.error, "error");
@@ -242,10 +230,10 @@ function AdminDashboard() {
       setUsers((prev) =>
         prev.map((user) => (user.id === selectedUserId ? formData : user))
       );
-      toast.success("User updated successfully!");
+      showToast("User updated successfully!");
       setShowModal({ ...showModal, update: false });
     } catch {
-      toast.error("Failed to update user.");
+      showToast("Failed to update user.");
     }
   };
   // Function to open the delete confirmation modal
@@ -271,10 +259,10 @@ const confirmDeleteUser = async () => {
   try {
     await deleteUser(selectedUserId); // Call API to delete user
     setUsers((prevUsers) => prevUsers.filter((user) => user._id !== selectedUserId)); // Update state
-    toast.success("User deleted successfully.");
+    showToast("User deleted successfully.");
   } catch (error) {
     console.error("Error deleting user:", error);
-    toast.error("Failed to delete user. Please try again.");
+    showToast("Failed to delete user. Please try again.");
   } finally {
     closeDeleteModal(); // Ensure modal is closed
   }

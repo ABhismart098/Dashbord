@@ -18,7 +18,7 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-const generateToken = (user, expiresIn = '5m') => {
+const generateToken = (user, expiresIn = '1h') => {
   return jwt.sign(
     {
       userId: user.id,

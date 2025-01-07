@@ -4,17 +4,9 @@ import "./Dashboard.css";
 import { addUser, fetchUsers, updateUser, deleteUser } from "../api/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import showToast from "./Aleart";
-
-
-
-
-
+import { isTokenValid } from "../isTokenValid";
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
-
-
-
-
 function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [profileImage, setProfileImage] = useState("https://via.placeholder.com/40");
@@ -51,6 +43,9 @@ function AdminDashboard() {
 
 
   useEffect(() => {
+    if(!isTokenValid()){
+      navigate("/login");
+    }
    showToast("Welcome to the Admin Dashboard!", {
       
     });
@@ -230,8 +225,9 @@ const filteredEmployees = useMemo(() => {
       setUsers((prev) =>
         prev.map((user) => (user.id === selectedUserId ? formData : user))
       );
-      showToast("User updated successfully!");
+      
       setShowModal({ ...showModal, update: false });
+      showToast("User updated successfully!");
     } catch {
       showToast("Failed to update user.");
     }
@@ -257,9 +253,13 @@ const confirmDeleteUser = async () => {
   }
 
   try {
-    await deleteUser(selectedUserId); // Call API to delete user
+   const res =  await deleteUser(selectedUserId); // Call API to delete user
+   if (res) {
     setUsers((prevUsers) => prevUsers.filter((user) => user._id !== selectedUserId)); // Update state
     showToast("User deleted successfully.");
+   } else {
+    showToast("Failed to delete user. Please try again.");  
+    }
   } catch (error) {
     console.error("Error deleting user:", error);
     showToast("Failed to delete user. Please try again.");
@@ -334,6 +334,7 @@ const handleDeleteUser = (userId) => {
                 </tr>
               </thead>
               <tbody>
+              
                 {currentRows.length > 0 ? (
                   currentRows.map((user) => (
                     <tr key={user.id}>
@@ -363,7 +364,7 @@ const handleDeleteUser = (userId) => {
                               fontSize: "20px",
                             }}
                           >
-                            {user.name[0].toUpperCase()}
+                            {user.name && user.name[0] ? user.name[0].toUpperCase() : "?"}
                           </div>
                         )}
                       </td>
@@ -375,7 +376,7 @@ const handleDeleteUser = (userId) => {
                       <td>{user.designation}</td>
                       <td style={{ textAlign: "center" }}>
                         <button
-                          onClick={() => handleUpdateUser(user.id)}
+                          onClick={() => handleUpdateUser(user._id)}
                           style={{
                             margin: "0 5px",
                             padding: "5px 10px",

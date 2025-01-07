@@ -440,3 +440,20 @@
   color: #fff;
   cursor: not-allowed;
 }
+
+/* Add this to your CSS file or a style block */
+.delete-btn {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.delete-btn:hover {
+  background-color: darkgreen; /* Darker shade on hover */
+}
+

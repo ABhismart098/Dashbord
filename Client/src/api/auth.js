@@ -133,6 +133,7 @@ export const updateUser = async (userId, updatedData) => {
 export const deleteUser = async (userId) => {
   try {
     const token = localStorage.getItem("authToken");
+    
     if (!token) {
       throw new Error("Authorization token is missing");
     }
@@ -144,8 +145,9 @@ export const deleteUser = async (userId) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    console.log(response );
     if (response) {
+
       return response.data;
     }
   } catch (error) {

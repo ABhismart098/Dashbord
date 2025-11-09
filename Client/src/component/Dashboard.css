@@ -64,16 +64,43 @@
   padding: 20px;
   background-color: white;
   border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
 }
 
-.employee-list ul {
-  list-style-type: none;
-  padding: 0;
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
 }
 
-.employee-list li {
-  font-size: 16px;
-  margin-bottom: 10px;
+.employee-table th,
+.employee-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.employee-table th {
+  background-color: #f4f4f4;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.fallback-profile {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 /* Add User Button */
@@ -121,7 +148,8 @@
   margin-bottom: 10px;
 }
 
-.input-container input {
+.input-container input,
+.input-container select {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -129,7 +157,8 @@
   border: 1px solid #ddd;
 }
 
-.input-container input:focus {
+.input-container input:focus,
+.input-container select:focus {
   outline: none;
   border-color: #0056b3;
 }
@@ -138,289 +167,66 @@
   display: flex;
   justify-content: space-between;
 }
-/* /// */
-.user-form{
+
+.user-form {
   display: flex;
   flex-direction: column;
-  gap:10px;
+  gap: 10px;
 }
-.course-name{
-  width:max-content;
-  display: flex;
-  justify-content: start;
-  
-}
-.gender-options{
+
+.course-name,
+.gender-options {
   width: max-content;
   display: flex;
   justify-content: start;
 }
-.gender-section,.course-section{
+
+.gender-section,
+.course-section {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .submit-btn,
-.cancel-btn {
+.cancel-btn,
+.delete-btn {
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
 }
 
 .submit-btn {
   background-color: #4caf50;
   color: white;
-  border: none;
-}
-
-.cancel-btn {
-  background-color: #f44336;
-  color: white;
-  border: none;
 }
 
 .submit-btn:hover {
   background-color: #45a049;
 }
 
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
 .cancel-btn:hover {
   background-color: #e31b0c;
 }
 
-/* Media Queries for Responsiveness */
-
-/* For Tablets (600px to 768px) */
-@media (max-width: 768px) {
-  .navbar-left .logo {
-    font-size: 18px;
-  }
-
-  .navbar-right {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 10px;
-  }
-
-  .search-container input {
-    margin-bottom: 10px;
-    width: 100%;
-  }
-
-  .profile-icon img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-  }
-
-  .logout-btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .add-user-button-container {
-    text-align: left;
-  }
-
-  .employee-list {
-    margin-top: 10px;
-    padding: 15px;
-  }
-
-  .add-user-btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .modal-content {
-    width: 90%;
-  }
-
-  .input-container input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .submit-btn,
-  .cancel-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-}
-
-/* For Mobile (max-width: 600px) */
-@media (max-width: 600px) {
-  .navbar {
-    padding: 10px;
-  }
-
-  .navbar-left .logo {
-    font-size: 16px;
-  }
-
-  .navbar-right {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 10px;
-  }
-
-  .search-container input {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .profile-icon img {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px;
-  }
-
-  .logout-btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .add-user-button-container {
-    text-align: left;
-  }
-
-  .employee-list {
-    margin-top: 10px;
-    padding: 15px;
-  }
-
-  .add-user-btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .modal-content {
-    width: 90%;
-  }
-
-  .input-container input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .submit-btn,
-  .cancel-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-}
-
-/* For Extra Small Devices (max-width: 400px) */
-@media (max-width: 400px) {
-  .navbar-left .logo {
-    font-size: 14px;
-  }
-
-  .navbar-right {
-    align-items: flex-start;
-  }
-
-  .search-container input {
-    font-size: 12px;
-  }
-
-  .profile-icon img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .add-user-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-
-  .submit-btn,
-  .cancel-btn {
-    font-size: 12px;
-    padding: 8px 14px;
-  }
-
-  .modal-content {
-    width: 90%;
-  }
-}
-
-.employee-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
-
-.employee-table th,
-.employee-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.employee-table th {
-  background-color: #f4f4f4;
-}
-
-.action-btn {
-  padding: 5px 10px;
-  margin: 0 5px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.pagination {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.pagination-btn {
-  padding: 5px 10px;
-  margin: 0 5px;
-  border: 1px solid #ddd;
-  background-color: white;
-  cursor: pointer;
-}
-
-.pagination-btn.active {
-  background-color: #007bff;
+.delete-btn {
+  background-color: #dc3545;
   color: white;
 }
-.employee-table {
-  width: 100%;
-  border-collapse: collapse;
+
+.delete-btn:hover {
+  background-color: #a71d2a;
 }
 
-.employee-table th,
-.employee-table td {
-  padding: 8px;
-  text-align: left;
-  border: 1px solid #ccc;
-}
-
-.profile-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.fallback-profile {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #007bff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: bold;
-  font-size: 20px;
-}
-
+/* Pagination */
 .pagination {
   margin-top: 10px;
   text-align: center;
@@ -441,19 +247,35 @@
   cursor: not-allowed;
 }
 
-/* Add this to your CSS file or a style block */
-.delete-btn {
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth transition */
+/* Media Queries for Responsiveness */
+
+/* Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .navbar-left .logo { font-size: 18px; }
+  .navbar-right {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+  .search-container input { margin-bottom: 10px; width: 100%; }
+  .profile-icon img { width: 30px; height: 30px; margin-right: 10px; }
+  .logout-btn, .add-user-btn { width: 100%; margin-top: 10px; }
+  .employee-list { margin-top: 10px; padding: 15px; }
+  .modal-content { width: 90%; }
+  .input-container input, .submit-btn, .cancel-btn { font-size: 14px; padding: 8px 16px; }
 }
 
-.delete-btn:hover {
-  background-color: darkgreen; /* Darker shade on hover */
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+  .navbar-left .logo { font-size: 16px; }
+  .profile-icon img { width: 25px; height: 25px; }
+  .input-container input, .submit-btn, .cancel-btn { font-size: 14px; padding: 8px 16px; }
 }
 
+/* Extra Small Devices (max-width: 400px) */
+@media (max-width: 400px) {
+  .navbar-left .logo { font-size: 14px; }
+  .profile-icon img { width: 20px; height: 20px; }
+  .input-container input, .submit-btn, .cancel-btn { font-size: 12px; padding: 8px 14px; }
+  .modal-content { width: 90%; }
+}

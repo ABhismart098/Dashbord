@@ -11,6 +11,7 @@ const login = async (req, res) => {
   const user = await Login.findOne({ userName });
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    console.log(user.password,password);
     // Generate a JWT token
     const token = jwt.sign({ id: user._id, userName: user.userName }, process.env.JWT_SECRET, {
       expiresIn: '1h', // Token expiration time
